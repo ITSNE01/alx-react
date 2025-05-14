@@ -1,7 +1,7 @@
 // src/utils.js
 
 /**
- * Returns the current year as a number (e.g. 2025)
+ * Returns the current year
  */
 export function getFullYear() {
   return new Date().getFullYear();
@@ -9,8 +9,15 @@ export function getFullYear() {
 
 /**
  * Returns the correct footer text.
- * @param {boolean} isIndex — true for the landing page, false otherwise
+ * @param {boolean} isIndex
  */
 export function getFooterCopy(isIndex) {
   return isIndex ? 'ALX' : 'ALX main dashboard';
+}
+
+/**
+ * Returns the latest notification string (with HTML)
+ */
+export function getLatestNotification() {
+  return '<strong>Urgent requirement</strong> - complete by EOD';
 }
