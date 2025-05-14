@@ -1,6 +1,9 @@
 // src/setupTests.js
-import Enzyme from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
 
+// Polyfill TextEncoder/TextDecoder
+const { TextEncoder, TextDecoder } = require('util');
+global.TextEncoder = TextEncoder;
+global.TextDecoder = TextDecoder;
 
-Enzyme.configure({ adapter: new Adapter() });
+// Add RTL jest-dom extensions
+import '@testing-library/jest-dom';
