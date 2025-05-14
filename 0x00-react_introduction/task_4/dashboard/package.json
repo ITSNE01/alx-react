@@ -9,7 +9,7 @@
     "react-scripts": "^5.0.1",
     "web-vitals": "^2.1.4"
   },
-  "homepage": "https://ITSNE01.github.com/alx-react/0x01-react_intro/task_4/dashboard",
+  "homepage": "https://ITSNE01.github.io/alx-react/0x01-react_intro/task_4/dashboard",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
