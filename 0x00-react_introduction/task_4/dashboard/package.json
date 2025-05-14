@@ -9,9 +9,12 @@
     "react-scripts": "^5.0.1",
     "web-vitals": "^2.1.4"
   },
+  "homepage": "https://ITSNE01.github.com/alx-react/0x01-react_intro/task_4/dashboard",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "predeploy": "npm run build",
+    "deploy":   "gh-pages -d build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -37,6 +40,7 @@
     "@cfaester/enzyme-adapter-react-18": "^0.8.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
-    "@testing-library/user-event": "^14.6.1"
+    "@testing-library/user-event": "^14.6.1",
+    "gh-pages": "^6.3.0"
   }
 }
