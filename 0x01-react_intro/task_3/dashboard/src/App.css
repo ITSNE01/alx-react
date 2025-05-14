@@ -1,0 +1,52 @@
+.App {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: white;
+}
+
+.App-header {
+  background-color: white;
+  padding: 20px;
+  color: #e11d3f;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 3px solid #e11d3f;
+}
+
+.App-logo {
+  height: 80px;
+  width: auto;
+}
+
+.App-body {
+  flex: 1;
+  padding: 40px;
+  font-size: 1.2rem;
+  background-color: white;
+}
+
+.Login-form {
+  margin-top: 20px;
+}
+
+.form-group {
+  display: inline-block;
+  margin-right: 20px;
+}
+
+.Login-form button {
+  display: inline-block;
+  padding: 5px 15px;
+  cursor: pointer;
+}
+
+.App-footer {
+  background-color: white;
+  padding: 10px;
+  border-top: 3px solid #e11d3f;
+  font-style: italic;
+  text-align: center;
+}
