@@ -1,0 +1,17 @@
+.header {
+  display: flex;
+  align-items: center;
+  background-color: white;
+  border-bottom: 3px solid #e11d3f;
+  padding: 20px;
+}
+
+.header-logo {
+  height: 80px;
+  margin-right: 20px;
+}
+
+.header-title {
+  font-size: 2rem;
+  color: #333;
+}
