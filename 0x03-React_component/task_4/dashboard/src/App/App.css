@@ -1,0 +1,30 @@
+.App {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+}
+
+.App-header { /* existing rules */ }
+.App-footer { /* existing rules */ }
+
+.App-body {
+  background-color: #f9f9f9;
+  min-height: calc(100vh - 140px); /* account for header/footer height */
+  padding: 40px;
+}
+
+.App-body > .login-group,
+.App-body > button.login-button {
+  display: inline-block;
+  vertical-align: middle;
+}
+.App-body > .login-group:first-of-type {
+  margin-right: 20px;
+}
+
+.App-body #CourseList {
+  margin: 0 auto;
+  background-color: white;
+  padding: 20px;
+  border: 1px solid #ddd;
+}
