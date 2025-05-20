@@ -3,33 +3,16 @@ import PropTypes from 'prop-types';
 import Notifications from '../Notifications/Notifications';
 import Header from '../Header/Header';
 import Login from '../Login/Login';
-import Footer from '../Footer/Footer';
 import CourseList from '../CourseList/CourseList';
+import Footer from '../Footer/Footer';
+import BodySection from '../BodySection/BodySection';
+import BodySectionWithMarginBottom from '../BodySection/BodySectionWithMarginBottom';
 import './App.css';
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-    this.handleKeyDown = this.handleKeyDown.bind(this);
-  }
-
-  componentDidMount() {
-    document.addEventListener('keydown', this.handleKeyDown);
-  }
-
-  componentWillUnmount() {
-    document.removeEventListener('keydown', this.handleKeyDown);
-  }
-
-  handleKeyDown(e) {
-    if (e.ctrlKey && e.key === 'h') {
-      alert('Logging you out');
-      this.props.logOut();
-    }
-  }
-
   render() {
-    const { isLoggedIn, listCourses, listNotifications } = this.props;
+    const { isLoggedIn, listCourses, listNotifications, logOut } = this.props;
+
     return (
       <Fragment>
         <Notifications
@@ -38,13 +21,25 @@ class App extends Component {
         />
         <div className="App">
           <Header />
+
           <div className="App-body">
-            {isLoggedIn ? (
-              <CourseList listCourses={listCourses} />
+            {!isLoggedIn ? (
+              <BodySectionWithMarginBottom title="Log in to continue">
+                <Login />
+              </BodySectionWithMarginBottom>
             ) : (
-              <Login />
+              <BodySectionWithMarginBottom title="Course list">
+                <CourseList listCourses={listCourses} />
+              </BodySectionWithMarginBottom>
             )}
+
+            <BodySection title="News from the School">
+              <p>
+                Welcome to our school! Don’t miss the spring festival this weekend, and check out our latest news and events here.
+              </p>
+            </BodySection>
           </div>
+
           <div className="App-footer">
             <Footer />
           </div>
@@ -70,12 +65,8 @@ App.defaultProps = {
   ],
   listNotifications: [
     { id: 1, type: 'default', value: 'New course available' },
-    { id: 2, type: 'urgent',  value: 'New resume available' },
-    {
-      id: 3,
-      type: 'urgent',
-      html: { __html: '<strong>Urgent requirement</strong> - complete by EOD' },
-    },
+    { id: 2, type: 'urgent', value: 'New resume available' },
+    { id: 3, type: 'urgent', html: { __html: '<strong>Urgent requirement</strong> - complete by EOD' } },
   ],
   logOut: () => {},
 };
