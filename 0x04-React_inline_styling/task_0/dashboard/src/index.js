@@ -1,14 +1,11 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import Notifications from './Notifications/Notifications';
 import App from './App/App';
 
-const notifContainer = document.getElementById('root-notifications');
-if (notifContainer) {
-  createRoot(notifContainer).render(<Notifications />);
-}
+console.log('📦 index.js loaded');
 
-const appContainer = document.getElementById('root');
-if (appContainer) {
-  createRoot(appContainer).render(<App />);
+const container = document.getElementById('root');
+if (!container) {
+  throw new Error('No #root element found in index.html');
 }
+createRoot(container).render(<App />);
