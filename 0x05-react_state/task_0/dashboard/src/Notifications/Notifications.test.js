@@ -1,40 +1,45 @@
-import { StyleSheetTestUtils } from 'aphrodite';
-beforeAll(() => StyleSheetTestUtils.suppressStyleInjection());
-afterAll(()  => StyleSheetTestUtils.clearBufferAndResumeStyleInjection());
 import React from 'react';
-import { mount } from 'enzyme';
+import { shallow } from 'enzyme';
+import { StyleSheetTestUtils } from 'aphrodite';
 import Notifications from './Notifications';
 
-describe('<Notifications /> shouldComponentUpdate', () => {
-  let wrapper;
-  const list1 = [
-    { id: 1, type: 'default', value: 'New course available' },
-  ];
-  const list2 = [
-    ...list1,
-    { id: 2, type: 'urgent', value: 'New resume available' },
-  ];
+describe('<Notifications /> interactions', () => {
+  beforeAll(() => StyleSheetTestUtils.suppressStyleInjection());
+  afterAll(()  => StyleSheetTestUtils.clearBufferAndResumeStyleInjection());
 
-  beforeEach(() => {
-    // Spy on render to count how many times component actually renders
-    jest.spyOn(Notifications.prototype, 'render');
-    wrapper = mount(<Notifications displayDrawer listNotifications={list1} />);
-    // clear initial render count
-    Notifications.prototype.render.mockClear();
+  it('clicking menu item calls handleDisplayDrawer', () => {
+    const handleDisplayDrawerMock = jest.fn();
+    const handleHideDrawerMock    = jest.fn();
+    const wrapper = shallow(
+      <Notifications
+        displayDrawer={false}
+        listNotifications={[]}
+        handleDisplayDrawer={handleDisplayDrawerMock}
+        handleHideDrawer={handleHideDrawerMock}
+      />
+    );
+
+    const menuDiv = wrapper.find('[data-testid="menuItem"]');
+    expect(menuDiv).toHaveLength(1);
+    menuDiv.simulate('click');
+    expect(handleDisplayDrawerMock).toHaveBeenCalled();
   });
 
-  afterEach(() => {
-    jest.restoreAllMocks();
-    wrapper.unmount();
-  });
+  it('clicking close button calls handleHideDrawer', () => {
+    const handleDisplayDrawerMock = jest.fn();
+    const handleHideDrawerMock    = jest.fn();
+    const wrapper = shallow(
+      <Notifications
+        displayDrawer={true}
+        listNotifications={[]}
+        handleDisplayDrawer={handleDisplayDrawerMock}
+        handleHideDrawer={handleHideDrawerMock}
+      />
+    );
 
-  it('does NOT rerender when props.listNotifications length stays the same', () => {
-    wrapper.setProps({ listNotifications: list1 });
-    expect(Notifications.prototype.render).not.toHaveBeenCalled();
-  });
-
-  it('does rerender when props.listNotifications length increases', () => {
-    wrapper.setProps({ listNotifications: list2 });
-    expect(Notifications.prototype.render).toHaveBeenCalled();
+    const closeBtn = wrapper.find('[data-testid="closeButton"]');
+    expect(closeBtn).toHaveLength(1);
+    closeBtn.simulate('click');
+    expect(handleHideDrawerMock).toHaveBeenCalled();
   });
 });

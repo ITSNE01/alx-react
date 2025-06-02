@@ -93,7 +93,10 @@ export default class Notifications extends Component {
   }
 
   shouldComponentUpdate(nextProps) {
-    return nextProps.listNotifications.length > this.props.listNotifications.length;
+    return (
+      nextProps.listNotifications.length > this.props.listNotifications.length ||
+      nextProps.displayDrawer !== this.props.displayDrawer
+    );
   }
 
   markAsRead(id) {
@@ -101,23 +104,33 @@ export default class Notifications extends Component {
   }
 
   render() {
-    const { displayDrawer, listNotifications } = this.props;
+    const {
+      displayDrawer,
+      listNotifications,
+      handleDisplayDrawer,
+      handleHideDrawer,
+    } = this.props;
 
     return (
       <>
-        {/* only show the menuItem when drawer is closed */}
+        {/* show menu item only if drawer is closed */}
         {!displayDrawer && (
-          <div className={css(styles.menuItem)}>
+          <div
+            className={css(styles.menuItem)}
+            onClick={handleDisplayDrawer}
+            data-testid="menuItem"
+          >
             Your notifications
           </div>
         )}
 
         {displayDrawer && (
-          <div className={css(styles.drawer)}>
+          <div className={css(styles.drawer)} data-testid="drawer">
             <button
               aria-label="Close"
-              onClick={() => console.log('Close button has been clicked')}
+              onClick={handleHideDrawer}
               className={css(styles.closeButton)}
+              data-testid="closeButton"
             >
               <img src="../assets/close-icon.png" alt="close icon" />
             </button>
@@ -126,7 +139,9 @@ export default class Notifications extends Component {
               <p className={css(styles.noNotif)}>No new notification for now</p>
             ) : (
               <>
-                <p className={css(styles.header)}>Here is the list of notifications</p>
+                <p className={css(styles.header)}>
+                  Here is the list of notifications
+                </p>
                 <ul className={css(styles.list)}>
                   {listNotifications.map(({ id, type, value, html }) => (
                     <NotificationItem
@@ -151,6 +166,8 @@ export default class Notifications extends Component {
 Notifications.propTypes = {
   displayDrawer:     PropTypes.bool,
   listNotifications: PropTypes.arrayOf(NotificationItemShape),
+  handleDisplayDrawer: PropTypes.func.isRequired,
+  handleHideDrawer:    PropTypes.func.isRequired,
 };
 
 Notifications.defaultProps = {

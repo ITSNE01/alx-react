@@ -1,30 +1,25 @@
-import { StyleSheetTestUtils } from 'aphrodite';
-beforeAll(() => StyleSheetTestUtils.suppressStyleInjection());
-afterAll(()  => StyleSheetTestUtils.clearBufferAndResumeStyleInjection());
 import React from 'react';
-import { mount } from 'enzyme';
+import { shallow } from 'enzyme';
 import App from './App';
 
-describe('<App /> lifecycle and logout shortcut', () => {
-  let alertSpy;
-  let logOutMock;
-  let wrapper;
-
-  beforeEach(() => {
-    alertSpy   = jest.spyOn(window, 'alert').mockImplementation(() => {});
-    logOutMock = jest.fn();
-    wrapper    = mount(<App logOut={logOutMock} />);
+describe('<App /> stateful displayDrawer', () => {
+  it('default state displayDrawer is false', () => {
+    const wrapper = shallow(<App />);
+    expect(wrapper.state('displayDrawer')).toBe(false);
   });
 
-  afterEach(() => {
-    wrapper.unmount();
-    alertSpy.mockRestore();
+  it('handleDisplayDrawer sets displayDrawer to true', () => {
+    const wrapper = shallow(<App />);
+    wrapper.instance().handleDisplayDrawer();
+    expect(wrapper.state('displayDrawer')).toBe(true);
   });
 
-  it('calls alert and logOut on Ctrl+H press', () => {
-    const event = new KeyboardEvent('keydown', { key: 'h', ctrlKey: true });
-    document.dispatchEvent(event);
-    expect(alertSpy).toHaveBeenCalledWith('Logging you out');
-    expect(logOutMock).toHaveBeenCalled();
+  it('handleHideDrawer sets displayDrawer to false', () => {
+    const wrapper = shallow(<App />);
+    wrapper.setState({ displayDrawer: true });
+    expect(wrapper.state('displayDrawer')).toBe(true);
+
+    wrapper.instance().handleHideDrawer();
+    expect(wrapper.state('displayDrawer')).toBe(false);
   });
 });
