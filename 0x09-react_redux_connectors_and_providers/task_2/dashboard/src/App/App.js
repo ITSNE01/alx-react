@@ -15,6 +15,8 @@ import BodySectionWithMarginBottom from '../BodySection/BodySectionWithMarginBot
 import {
   displayNotificationDrawer,
   hideNotificationDrawer,
+  loginRequest,
+  logout,
 } from '../actions/uiActionCreators';
 
 class App extends Component {
@@ -24,19 +26,7 @@ class App extends Component {
       user: { ...defaultUser },
       listNotifications: props.listNotifications,
     };
-    this.logIn = this.logIn.bind(this);
-    this.logOut = this.logOut.bind(this);
     this.markNotificationAsRead = this.markNotificationAsRead.bind(this);
-  }
-
-  logIn(email, password) {
-    this.setState({
-      user: { email, password, isLoggedIn: true },
-    });
-  }
-
-  logOut() {
-    this.setState({ user: { ...defaultUser } });
   }
 
   markNotificationAsRead(id) {
@@ -52,11 +42,13 @@ class App extends Component {
       displayDrawer,
       displayNotificationDrawer,
       hideNotificationDrawer,
+      loginRequest,
+      logout,
     } = this.props;
     const { user, listNotifications } = this.state;
 
     return (
-      <AppContext.Provider value={{ user, logOut: this.logOut }}>
+      <AppContext.Provider value={{ user, logOut: logout }}>
         <Fragment>
           <Notifications
             displayDrawer={displayDrawer}
@@ -72,7 +64,7 @@ class App extends Component {
             <div className={css(styles.body)}>
               {!isLoggedIn ? (
                 <BodySectionWithMarginBottom title="Log in to continue">
-                  <Login logIn={this.logIn} />
+                  <Login logIn={loginRequest} />
                 </BodySectionWithMarginBottom>
               ) : (
                 <BodySectionWithMarginBottom title="Course list">
@@ -118,6 +110,8 @@ App.propTypes = {
   displayDrawer:                 PropTypes.bool.isRequired,
   displayNotificationDrawer:     PropTypes.func.isRequired,
   hideNotificationDrawer:        PropTypes.func.isRequired,
+  loginRequest:                  PropTypes.func.isRequired,
+  logout:                        PropTypes.func.isRequired,
 };
 
 App.defaultProps = {
@@ -130,7 +124,14 @@ const mapStateToProps = (state) => ({
   displayDrawer: state.uiReducer.isNotificationDrawerVisible,
 });
 
+const mapDispatchToProps = {
+  displayNotificationDrawer,
+  hideNotificationDrawer,
+  loginRequest,
+  logout,
+};
+
 export default connect(
   mapStateToProps,
-  { displayNotificationDrawer, hideNotificationDrawer }
+  mapDispatchToProps
 )(App);
