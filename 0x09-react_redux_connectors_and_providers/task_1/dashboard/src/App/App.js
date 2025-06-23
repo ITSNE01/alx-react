@@ -12,6 +12,11 @@ import Footer from '../Footer/Footer';
 import BodySection from '../BodySection/BodySection';
 import BodySectionWithMarginBottom from '../BodySection/BodySectionWithMarginBottom';
 
+import {
+  displayNotificationDrawer,
+  hideNotificationDrawer,
+} from '../actions/uiActionCreators';
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -41,7 +46,13 @@ class App extends Component {
   }
 
   render() {
-    const { listCourses, isLoggedIn, displayDrawer } = this.props;
+    const {
+      listCourses,
+      isLoggedIn,
+      displayDrawer,
+      displayNotificationDrawer,
+      hideNotificationDrawer,
+    } = this.props;
     const { user, listNotifications } = this.state;
 
     return (
@@ -50,8 +61,8 @@ class App extends Component {
           <Notifications
             displayDrawer={displayDrawer}
             listNotifications={listNotifications}
-            handleDisplayDrawer={() => {}}
-            handleHideDrawer={() => {}}
+            handleDisplayDrawer={displayNotificationDrawer}
+            handleHideDrawer={hideNotificationDrawer}
             markNotificationAsRead={this.markNotificationAsRead}
           />
 
@@ -101,10 +112,12 @@ const styles = StyleSheet.create({
 });
 
 App.propTypes = {
-  listCourses:       PropTypes.array.isRequired,
-  listNotifications: PropTypes.array.isRequired,
-  isLoggedIn:        PropTypes.bool.isRequired,
-  displayDrawer:     PropTypes.bool.isRequired,
+  listCourses:                     PropTypes.array.isRequired,
+  listNotifications:               PropTypes.array.isRequired,
+  isLoggedIn:                      PropTypes.bool.isRequired,
+  displayDrawer:                   PropTypes.bool.isRequired,
+  displayNotificationDrawer:       PropTypes.func.isRequired,
+  hideNotificationDrawer:          PropTypes.func.isRequired,
 };
 
 App.defaultProps = {
@@ -117,4 +130,7 @@ const mapStateToProps = (state) => ({
   displayDrawer: state.uiReducer.isNotificationDrawerVisible,
 });
 
-export default connect(mapStateToProps)(App);
+export default connect(
+  mapStateToProps,
+  { displayNotificationDrawer, hideNotificationDrawer }
+)(App);
