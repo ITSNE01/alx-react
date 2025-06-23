@@ -24,15 +24,7 @@ class App extends Component {
     super(props);
     this.state = {
       user: { ...defaultUser },
-      listNotifications: props.listNotifications,
     };
-    this.markNotificationAsRead = this.markNotificationAsRead.bind(this);
-  }
-
-  markNotificationAsRead(id) {
-    this.setState((prev) => ({
-      listNotifications: prev.listNotifications.filter((n) => n.id !== id),
-    }));
   }
 
   render() {
@@ -45,17 +37,14 @@ class App extends Component {
       loginRequest,
       logout,
     } = this.props;
-    const { user, listNotifications } = this.state;
 
     return (
-      <AppContext.Provider value={{ user, logOut: logout }}>
+      <AppContext.Provider value={{ user: this.state.user, logOut: logout }}>
         <Fragment>
           <Notifications
             displayDrawer={displayDrawer}
-            listNotifications={listNotifications}
             handleDisplayDrawer={displayNotificationDrawer}
             handleHideDrawer={hideNotificationDrawer}
-            markNotificationAsRead={this.markNotificationAsRead}
           />
 
           <div className="App">
@@ -104,34 +93,25 @@ const styles = StyleSheet.create({
 });
 
 App.propTypes = {
-  listCourses:                   PropTypes.array.isRequired,
-  listNotifications:             PropTypes.array.isRequired,
-  isLoggedIn:                    PropTypes.bool.isRequired,
-  displayDrawer:                 PropTypes.bool.isRequired,
-  displayNotificationDrawer:     PropTypes.func.isRequired,
-  hideNotificationDrawer:        PropTypes.func.isRequired,
-  loginRequest:                  PropTypes.func.isRequired,
-  logout:                        PropTypes.func.isRequired,
+  listCourses:               PropTypes.array.isRequired,
+  isLoggedIn:                PropTypes.bool.isRequired,
+  displayDrawer:             PropTypes.bool.isRequired,
+  displayNotificationDrawer: PropTypes.func.isRequired,
+  hideNotificationDrawer:    PropTypes.func.isRequired,
+  loginRequest:              PropTypes.func.isRequired,
+  logout:                    PropTypes.func.isRequired,
 };
 
 App.defaultProps = {
-  listCourses:       [],
-  listNotifications: [],
+  listCourses: [],
 };
 
 const mapStateToProps = (state) => ({
-  isLoggedIn:    state.uiReducer.isUserLoggedIn,
-  displayDrawer: state.uiReducer.isNotificationDrawerVisible,
+  isLoggedIn:    state.ui.get('isUserLoggedIn'),
+  displayDrawer: state.ui.get('isNotificationDrawerVisible'),
 });
-
-const mapDispatchToProps = {
-  displayNotificationDrawer,
-  hideNotificationDrawer,
-  loginRequest,
-  logout,
-};
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  { displayNotificationDrawer, hideNotificationDrawer, loginRequest, logout }
 )(App);
