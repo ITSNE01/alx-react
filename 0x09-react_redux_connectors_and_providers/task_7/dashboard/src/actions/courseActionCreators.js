@@ -1,5 +1,8 @@
-import { bindActionCreators } from 'redux';
-import { SELECT_COURSE, UNSELECT_COURSE } from './courseActionTypes';
+import {
+  SELECT_COURSE,
+  UNSELECT_COURSE,
+  FETCH_COURSE_SUCCESS,
+} from './courseActionTypes';
 
 /**
  * Action creator for selecting a course.
@@ -24,12 +27,25 @@ export function unSelectCourse(index) {
 }
 
 /**
- * Binds the above action creators to dispatch.
- * Usage: const { selectCourse, unSelectCourse } = bindCourseActionCreators(dispatch);
+ * Action creator to load courses into the store.
+ * @param {Array} data
  */
-export function bindCourseActionCreators(dispatch) {
-  return bindActionCreators(
-    { selectCourse, unSelectCourse },
-    dispatch
-  );
+export function setCourses(data) {
+  return {
+    type: FETCH_COURSE_SUCCESS,
+    data,
+  };
+}
+
+/**
+ * Thunk action creator that fetches /courses.json and dispatches setCourses.
+ */
+export function fetchCourses() {
+  return (dispatch) => {
+    return fetch('/courses.json')
+      .then((res) => res.json())
+      .then((json) => {
+        dispatch(setCourses(json));
+      });
+  };
 }
