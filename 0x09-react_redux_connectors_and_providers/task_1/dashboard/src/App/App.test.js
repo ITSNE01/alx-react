@@ -34,8 +34,8 @@ describe('<App /> state and notification removal', () => {
   it('markNotificationAsRead removes the correct notification', () => {
     const initialNotifs = [
       { id: 1, type: 'default', value: 'One' },
-      { id: 2, type: 'urgent', value: 'Two' },
-      { id: 3, type: 'urgent', value: 'Three' },
+      { id: 2, type: 'urgent',  value: 'Two' },
+      { id: 3, type: 'urgent',  value: 'Three' },
     ];
     const wrapper = shallow(
       <App listCourses={[]} listNotifications={initialNotifs} />
@@ -51,9 +51,17 @@ describe('<App /> state and notification removal', () => {
 });
 
 describe('mapStateToProps', () => {
-  it('returns { isLoggedIn: true } when state.uiReducer.isUserLoggedIn is true', () => {
-    const state = { uiReducer: fromJS({ isUserLoggedIn: true }) };
-    const props = mapStateToProps(state);
-    expect(props).toEqual({ isLoggedIn: true });
+  it('maps state.uiReducer to props correctly', () => {
+    const fakeState = {
+      uiReducer: fromJS({
+        isUserLoggedIn: true,
+        isNotificationDrawerVisible: false,
+      }),
+    };
+    const props = mapStateToProps(fakeState);
+    expect(props).toEqual({
+      isLoggedIn: true,
+      displayDrawer: false,
+    });
   });
 });
