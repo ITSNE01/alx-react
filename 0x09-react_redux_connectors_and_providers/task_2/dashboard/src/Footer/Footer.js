@@ -1,20 +1,35 @@
 import React from 'react';
-import AppContext from '../App/AppContext';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
-export default function Footer() {
+function Footer({ user }) {
   return (
-    <AppContext.Consumer>
-      {({ user }) => (
-        <footer className="footer">
-          <p>Copyright 2020 - Holberton School</p>
-          {/* Show “Contact us” link only if user.isLoggedIn */}
-          {user.isLoggedIn && (
-            <p>
-              <a href="#contact">Contact us</a>
-            </p>
-          )}
-        </footer>
+    <footer className="footer">
+      <p>Copyright 2020 - Holberton School</p>
+      {user.isLoggedIn && (
+        <p>
+          <a href="#contact">Contact us</a>
+        </p>
       )}
-    </AppContext.Consumer>
+    </footer>
   );
 }
+
+Footer.propTypes = {
+  user: PropTypes.shape({
+    isLoggedIn: PropTypes.bool,
+  }),
+};
+
+Footer.defaultProps = {
+  user: {
+    isLoggedIn: false,
+  },
+};
+
+const mapStateToProps = (state) => ({
+  user: state.uiReducer.user,
+});
+
+export default connect(mapStateToProps)(Footer);
+
