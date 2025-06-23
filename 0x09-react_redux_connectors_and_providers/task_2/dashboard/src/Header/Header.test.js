@@ -1,53 +1,37 @@
 import React from 'react';
-import { mount } from 'enzyme';
-import { StyleSheetTestUtils } from 'aphrodite';
-import Header from './Header';
-import AppContext, { defaultUser, defaultLogOut } from '../App/AppContext';
+import { shallow } from 'enzyme';
+import { Header } from './Header';
 
-describe('<Header /> context integration', () => {
-  beforeAll(() => StyleSheetTestUtils.suppressStyleInjection());
-  afterAll(()  => StyleSheetTestUtils.clearBufferAndResumeStyleInjection());
+describe('<Header />', () => {
+  const baseProps = {
+    user: { isLoggedIn: false, email: '' },
+    logout: jest.fn(),
+  };
 
-  it('does NOT render logoutSection by default', () => {
-    // Provide default context (user.isLoggedIn = false)
-    const wrapper = mount(
-      <AppContext.Provider value={{ user: defaultUser, logOut: defaultLogOut }}>
-        <Header />
-      </AppContext.Provider>
-    );
+  it('renders without crashing when logged out', () => {
+    const wrapper = shallow(<Header {...baseProps} />);
+    expect(wrapper.exists()).toBe(true);
     expect(wrapper.find('#logoutSection')).toHaveLength(0);
   });
 
-  it('renders logoutSection when user.isLoggedIn is true', () => {
-    const mockUser = {
-      email: 'test@example.com',
-      password: 'pwd',
-      isLoggedIn: true,
+  it('renders logout section when user is logged in', () => {
+    const props = {
+      user: { isLoggedIn: true, email: 'test@ex.com' },
+      logout: jest.fn(),
     };
-    const wrapper = mount(
-      <AppContext.Provider value={{ user: mockUser, logOut: defaultLogOut }}>
-        <Header />
-      </AppContext.Provider>
-    );
-    const logoutDiv = wrapper.find('#logoutSection');
-    expect(logoutDiv).toHaveLength(1);
-    expect(logoutDiv.text()).toContain('Welcome test@example.com');
+    const wrapper = shallow(<Header {...props} />);
+    expect(wrapper.find('#logoutSection')).toHaveLength(1);
+    expect(wrapper.find('#logoutSection').text()).toContain('Welcome test@ex.com');
   });
 
-  it('clicking logout calls context.logOut', () => {
-    const mockUser = {
-      email: 'test@example.com',
-      password: 'pwd',
-      isLoggedIn: true,
+  it('calls logout prop on clicking logout link', () => {
+    const logoutMock = jest.fn();
+    const props = {
+      user: { isLoggedIn: true, email: 'test@ex.com' },
+      logout: logoutMock,
     };
-    const logOutSpy = jest.fn();
-    const wrapper = mount(
-      <AppContext.Provider value={{ user: mockUser, logOut: logOutSpy }}>
-        <Header />
-      </AppContext.Provider>
-    );
-    const logoutLink = wrapper.find('#logoutSection span');
-    logoutLink.simulate('click');
-    expect(logOutSpy).toHaveBeenCalled();
+    const wrapper = shallow(<Header {...props} />);
+    wrapper.find('span').simulate('click');
+    expect(logoutMock).toHaveBeenCalled();
   });
 });

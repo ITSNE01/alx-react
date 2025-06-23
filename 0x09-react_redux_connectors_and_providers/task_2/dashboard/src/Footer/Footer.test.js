@@ -1,39 +1,17 @@
 import React from 'react';
-import { mount } from 'enzyme';
-import { StyleSheetTestUtils } from 'aphrodite';
+import { shallow } from 'enzyme';
+import { Footer } from './Footer';
 
-import Footer from './Footer';
-import AppContext, { defaultUser, defaultLogOut } from '../App/AppContext';
-
-describe('<Footer /> with Context consumer', () => {
-  beforeAll(() => StyleSheetTestUtils.suppressStyleInjection());
-  afterAll(() => StyleSheetTestUtils.clearBufferAndResumeStyleInjection());
-
-  it('does not display Contact us when user is logged out', () => {
-    const contextValue = {
-      user: { email: '', password: '', isLoggedIn: false },
-      logOut: defaultLogOut,
-    };
-    const wrapper = mount(
-      <AppContext.Provider value={contextValue}>
-        <Footer />
-      </AppContext.Provider>
-    );
-    expect(wrapper.find('a').exists()).toBe(false);
+describe('<Footer />', () => {
+  it('renders without crashing when user not logged in', () => {
+    const wrapper = shallow(<Footer user={{ isLoggedIn: false }} />);
+    expect(wrapper.exists()).toBe(true);
+    expect(wrapper.find('a')).toHaveLength(0);
   });
 
-  it('displays Contact us when user.isLoggedIn is true', () => {
-    const contextValue = {
-      user: { email: 'foo@bar.com', password: 'pwd', isLoggedIn: true },
-      logOut: defaultLogOut,
-    };
-    const wrapper = mount(
-      <AppContext.Provider value={contextValue}>
-        <Footer />
-      </AppContext.Provider>
-    );
-    const link = wrapper.find('a');
-    expect(link.exists()).toBe(true);
-    expect(link.text()).toBe('Contact us');
+  it('renders "Contact us" link when user is logged in', () => {
+    const wrapper = shallow(<Footer user={{ isLoggedIn: true }} />);
+    expect(wrapper.find('a')).toHaveLength(1);
+    expect(wrapper.find('a').text()).toBe('Contact us');
   });
 });
