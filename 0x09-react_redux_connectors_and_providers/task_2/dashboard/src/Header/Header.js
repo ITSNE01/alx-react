@@ -1,6 +1,8 @@
-import React, { Component } from 'react';
-import AppContext from '../App/AppContext';
+import React from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { StyleSheet, css } from 'aphrodite';
+import { logout } from '../actions/uiActionCreators';
 
 const styles = StyleSheet.create({
   header: {
@@ -31,34 +33,39 @@ const styles = StyleSheet.create({
   },
 });
 
-export default class Header extends Component {
-  static contextType = AppContext;
-
-  render() {
-    const { user, logOut } = this.context;
-    return (
-      <div>
-        <header className={css(styles.header)}>
-          <img
-            src="assets/holberton-logo.jpg"
-            className={css(styles.logo)}
-            alt="Holberton logo"
-          />
-          <h1 className={css(styles.title)}>School dashboard</h1>
-        </header>
-        {/* Show logoutSection only if user.isLoggedIn */}
-        {user.isLoggedIn && (
-          <div id="logoutSection" className={css(styles.logoutSection)}>
-            Welcome {user.email}
-            <span
-              onClick={logOut}
-              className={css(styles.logoutLink)}
-            >
-              (logout)
-            </span>
-          </div>
-        )}
-      </div>
-    );
-  }
+function Header({ user, logout }) {
+  return (
+    <div>
+      <header className={css(styles.header)}>
+        <img
+          src="assets/holberton-logo.jpg"
+          className={css(styles.logo)}
+          alt="Holberton logo"
+        />
+        <h1 className={css(styles.title)}>School dashboard</h1>
+      </header>
+      {user.isLoggedIn && (
+        <div id="logoutSection" className={css(styles.logoutSection)}>
+          Welcome {user.email}
+          <span onClick={logout} className={css(styles.logoutLink)}>
+            (logout)
+          </span>
+        </div>
+      )}
+    </div>
+  );
 }
+
+Header.propTypes = {
+  user: PropTypes.shape({
+    email: PropTypes.string,
+    isLoggedIn: PropTypes.bool,
+  }).isRequired,
+  logout: PropTypes.func.isRequired,
+};
+
+const mapStateToProps = (state) => ({
+  user: state.uiReducer.user,
+});
+
+export default connect(mapStateToProps, { logout })(Header);
