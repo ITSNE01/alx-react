@@ -1,31 +1,45 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import { StyleSheetTestUtils } from 'aphrodite';
-import Notifications from './Notifications';
+import { Notifications } from './Notifications';
+import {
+  setLoadingState,
+  setNotifications,
+  fetchNotifications,
+} from '../actions/notificationActionCreators';
 
-describe('<Notifications /> with markNotificationAsRead', () => {
-  beforeAll(() => StyleSheetTestUtils.suppressStyleInjection());
-  afterAll(()  => StyleSheetTestUtils.clearBufferAndResumeStyleInjection());
-
-  it('calls markNotificationAsRead when a NotificationItem is clicked', () => {
-    const mockMarkRead = jest.fn();
-    const listNotifs = [
-      { id: 1, type: 'default', value: 'One' },
-      { id: 2, type: 'urgent', value: 'Two' },
-    ];
-    const wrapper = shallow(
+describe('<Notifications />', () => {
+  it('calls fetchNotifications on mount', () => {
+    const fetchMock = jest.fn();
+    shallow(
       <Notifications
-        displayDrawer
-        listNotifications={listNotifs}
+        displayDrawer={false}
+        listNotifications={[]}
         handleDisplayDrawer={() => {}}
         handleHideDrawer={() => {}}
-        markNotificationAsRead={mockMarkRead}
+        fetchNotifications={fetchMock}
       />
     );
+    expect(fetchMock).toHaveBeenCalled();
+  });
+});
 
-    // Grab first NotificationItem and simulate its click
-    const firstItem = wrapper.find('NotificationItem').first();
-    firstItem.prop('markAsRead')(1);
-    expect(mockMarkRead).toHaveBeenCalledWith(1);
+describe('notification action creators', () => {
+  it('setLoadingState returns correct action', () => {
+    expect(setLoadingState(true)).toEqual({
+      type: 'SET_LOADING_STATE',
+      isLoading: true,
+    });
+  });
+
+  it('setNotifications returns correct action', () => {
+    const data = [{ id: 'x' }];
+    expect(setNotifications(data)).toEqual({
+      type: 'FETCH_NOTIFICATIONS_SUCCESS',
+      data,
+    });
+  });
+
+  it('fetchNotifications returns a function', () => {
+    expect(typeof fetchNotifications()).toBe('function');
   });
 });

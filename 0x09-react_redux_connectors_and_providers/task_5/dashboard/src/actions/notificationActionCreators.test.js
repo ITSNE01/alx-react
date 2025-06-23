@@ -1,33 +1,26 @@
 import {
-  MARK_AS_READ,
-  SET_TYPE_FILTER,
-  NotificationTypeFilters,
-} from './notificationActionTypes';
-
-import {
-  markAsAread,
-  setNotificationFilter,
+  setLoadingState,
+  setNotifications,
+  fetchNotifications,
 } from './notificationActionCreators';
 
 describe('notificationActionCreators', () => {
-  it('markAsAread(1) creates MARK_AS_READ action', () => {
-    expect(markAsAread(1)).toEqual({
-      type:  MARK_AS_READ,
-      index: 1,
+  it('setLoadingState', () => {
+    expect(setLoadingState(false)).toEqual({
+      type: 'SET_LOADING_STATE',
+      isLoading: false,
     });
   });
 
-  it('setNotificationFilter(DEFAULT) creates SET_TYPE_FILTER action', () => {
-    expect(setNotificationFilter(NotificationTypeFilters.DEFAULT)).toEqual({
-      type:   SET_TYPE_FILTER,
-      filter: NotificationTypeFilters.DEFAULT,
+  it('setNotifications', () => {
+    const arr = [1, 2];
+    expect(setNotifications(arr)).toEqual({
+      type: 'FETCH_NOTIFICATIONS_SUCCESS',
+      data: arr,
     });
   });
 
-  it('setNotificationFilter(URGENT) creates SET_TYPE_FILTER action', () => {
-    expect(setNotificationFilter(NotificationTypeFilters.URGENT)).toEqual({
-      type:   SET_TYPE_FILTER,
-      filter: NotificationTypeFilters.URGENT,
-    });
+  it('fetchNotifications is a thunk', () => {
+    expect(typeof fetchNotifications()).toBe('function');
   });
 });

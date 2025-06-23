@@ -1,29 +1,37 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import { fromJS } from 'immutable';
-import App, { mapStateToProps } from './App';
+import { App, mapStateToProps } from './App';
 import { defaultUser } from './AppContext';
 
-describe('<App /> state and notification removal', () => {
-  it('initial state.user equals defaultUser', () => {
-    const wrapper = shallow(<App listCourses={[]} listNotifications={[]} isLoggedIn={false} displayDrawer={false} />);
-    expect(wrapper.state('user')).toEqual(defaultUser);
+describe('App rendering based on props', () => {
+  const baseProps = {
+    listCourses: [],
+    listNotifications: [],
+    isLoggedIn: false,
+    displayDrawer: false,
+    displayNotificationDrawer: jest.fn(),
+    hideNotificationDrawer: jest.fn(),
+    loginRequest: jest.fn(),
+    logout: jest.fn(),
+  };
+
+  it('renders without crashing when not logged in', () => {
+    const wrapper = shallow(<App {...baseProps} />);
+    expect(wrapper.exists()).toBe(true);
   });
 
-  it('markNotificationAsRead removes the correct notification', () => {
-    const initialNotifs = [
-      { id: 1, type: 'default', value: 'One' },
-      { id: 2, type: 'urgent',  value: 'Two' },
-      { id: 3, type: 'urgent',  value: 'Three' },
-    ];
-    const wrapper = shallow(
-      <App listCourses={[]} listNotifications={initialNotifs} isLoggedIn={false} displayDrawer={false} />
-    );
-    expect(wrapper.state('listNotifications')).toHaveLength(3);
+  it('displays Login when isLoggedIn is false', () => {
+    const wrapper = shallow(<App {...baseProps} />);
+    expect(wrapper.find('Login')).toHaveLength(1);
+    expect(wrapper.find('CourseList')).toHaveLength(0);
+  });
 
-    wrapper.instance().markNotificationAsRead(2);
-    expect(wrapper.state('listNotifications')).toHaveLength(2);
-    expect(wrapper.state('listNotifications').find(n => n.id === 2)).toBeUndefined();
+  it('displays CourseList when isLoggedIn is true', () => {
+    const props = { ...baseProps, isLoggedIn: true };
+    const wrapper = shallow(<App {...props} />);
+    expect(wrapper.find('CourseList')).toHaveLength(1);
+    expect(wrapper.find('Login')).toHaveLength(0);
   });
 });
 

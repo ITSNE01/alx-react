@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { StyleSheet, css } from 'aphrodite';
-
 import NotificationItem from './NotificationItem';
 import {
   fetchNotifications,
@@ -19,7 +18,6 @@ export class Notifications extends Component {
       listNotifications,
       handleDisplayDrawer,
       handleHideDrawer,
-      markNotificationAsRead,
     } = this.props;
 
     return (
@@ -56,7 +54,6 @@ export class Notifications extends Component {
                       type={type}
                       value={value}
                       html={html}
-                      markAsRead={markNotificationAsRead}
                     />
                   ))}
                 </ul>
@@ -111,8 +108,8 @@ const styles = StyleSheet.create({
 });
 
 Notifications.propTypes = {
-  displayDrawer:         PropTypes.bool,
-  listNotifications:     PropTypes.arrayOf(
+  displayDrawer:      PropTypes.bool,
+  listNotifications:  PropTypes.arrayOf(
     PropTypes.shape({
       id:    PropTypes.string.isRequired,
       type:  PropTypes.string.isRequired,
@@ -120,15 +117,14 @@ Notifications.propTypes = {
       html:  PropTypes.shape({ __html: PropTypes.string }),
     })
   ),
-  handleDisplayDrawer:    PropTypes.func.isRequired,
-  handleHideDrawer:       PropTypes.func.isRequired,
-  markNotificationAsRead: PropTypes.func.isRequired,
-  fetchNotifications:     PropTypes.func.isRequired,
+  handleDisplayDrawer: PropTypes.func.isRequired,
+  handleHideDrawer:    PropTypes.func.isRequired,
+  fetchNotifications:  PropTypes.func.isRequired,
 };
 
 Notifications.defaultProps = {
-  displayDrawer:      false,
-  listNotifications:  [],
+  displayDrawer:     false,
+  listNotifications: [],
 };
 
 const mapStateToProps = (state) => ({
