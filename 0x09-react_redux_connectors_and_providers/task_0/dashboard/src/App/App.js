@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { StyleSheet, css } from 'aphrodite';
+import { connect } from 'react-redux';
 
 import AppContext, { defaultUser } from './AppContext';
 import Notifications from '../Notifications/Notifications';
@@ -44,14 +45,15 @@ class App extends Component {
   }
 
   render() {
-    const { user, listNotifications } = this.state;
     const { listCourses } = this.props;
+    const { user, listNotifications } = this.state;
+    const { isLoggedIn } = this.props;
 
     return (
       <AppContext.Provider value={{ user, logOut: this.logOut }}>
         <Fragment>
           <Notifications
-            displayDrawer={user.isLoggedIn}
+            displayDrawer={isLoggedIn}
             listNotifications={listNotifications}
             handleDisplayDrawer={() => {}}
             handleHideDrawer={() => {}}
@@ -62,7 +64,7 @@ class App extends Component {
             <Header />
 
             <div className={css(styles.body)}>
-              {!user.isLoggedIn ? (
+              {!isLoggedIn ? (
                 <BodySectionWithMarginBottom title="Log in to continue">
                   <Login logIn={this.logIn} />
                 </BodySectionWithMarginBottom>
@@ -104,13 +106,18 @@ const styles = StyleSheet.create({
 });
 
 App.propTypes = {
-  listCourses: PropTypes.array.isRequired,
+  listCourses:       PropTypes.array.isRequired,
   listNotifications: PropTypes.array.isRequired,
+  isLoggedIn:        PropTypes.bool.isRequired,
 };
 
 App.defaultProps = {
-  listCourses: [],
+  listCourses:       [],
   listNotifications: [],
 };
 
-export default App;
+const mapStateToProps = (state) => ({
+  isLoggedIn: state.uiReducer.isUserLoggedIn,
+});
+
+export default connect(mapStateToProps)(App);
