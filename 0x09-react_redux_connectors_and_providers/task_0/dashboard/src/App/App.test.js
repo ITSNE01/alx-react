@@ -1,6 +1,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import App from './App';
+import { fromJS } from 'immutable';
+import App, { mapStateToProps } from './App';
 import { defaultUser } from './AppContext';
 
 describe('<App /> state and notification removal', () => {
@@ -46,5 +47,13 @@ describe('<App /> state and notification removal', () => {
     expect(
       wrapper.state('listNotifications').find((n) => n.id === 2)
     ).toBeUndefined();
+  });
+});
+
+describe('mapStateToProps', () => {
+  it('returns { isLoggedIn: true } when state.uiReducer.isUserLoggedIn is true', () => {
+    const state = { uiReducer: fromJS({ isUserLoggedIn: true }) };
+    const props = mapStateToProps(state);
+    expect(props).toEqual({ isLoggedIn: true });
   });
 });
