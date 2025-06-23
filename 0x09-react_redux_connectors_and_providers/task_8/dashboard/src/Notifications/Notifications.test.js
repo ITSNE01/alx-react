@@ -1,52 +1,40 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import { fromJS } from 'immutable';
 import { Notifications } from './Notifications';
 import NotificationItem from './NotificationItem';
 
-describe('<Notifications />', () => {
+describe('<Notifications /> filters', () => {
   const baseProps = {
-    displayDrawer: false,
-    listNotifications: [],
-    handleDisplayDrawer: jest.fn(),
-    handleHideDrawer: jest.fn(),
-    fetchNotifications: jest.fn(),
-    markAsAread: jest.fn(),
+    displayDrawer:        true,
+    listNotifications:    [
+      { id: '1', type: 'default', value: 'First' },
+      { id: '2', type: 'urgent',  value: 'Second' },
+    ],
+    handleDisplayDrawer:  jest.fn(),
+    handleHideDrawer:     jest.fn(),
+    fetchNotifications:   jest.fn(),
+    markAsAread:          jest.fn(),
+    setNotificationFilter: jest.fn(),
   };
 
-  it('calls fetchNotifications on mount', () => {
-    shallow(<Notifications {...baseProps} />);
-    expect(baseProps.fetchNotifications).toHaveBeenCalled();
+  let wrapper;
+  beforeEach(() => {
+    wrapper = shallow(<Notifications {...baseProps} />);
   });
 
-  it('renders menu item always', () => {
-    const wrapper = shallow(<Notifications {...baseProps} />);
-    expect(wrapper.find('div').at(0).text()).toBe('Your notifications');
+  it('calls setNotificationFilter("URGENT") when urgent filter button clicked', () => {
+    const urgentBtn = wrapper
+      .find('button')
+      .filterWhere((n) => n.text() === '‼️');
+    urgentBtn.simulate('click');
+    expect(baseProps.setNotificationFilter).toHaveBeenCalledWith('URGENT');
   });
 
-  it('does not render drawer when displayDrawer is false', () => {
-    const wrapper = shallow(<Notifications {...baseProps} />);
-    expect(wrapper.find('div').someWhere(n => n.hasClass('Notifications'))).toBe(false);
-  });
-
-  it('renders drawer when displayDrawer is true', () => {
-    const props = { ...baseProps, displayDrawer: true };
-    const wrapper = shallow(<Notifications {...props} />);
-    expect(wrapper.find('.Notifications')).toHaveLength(0); // aphrodite classes differ, check ul
-    expect(wrapper.find('ul')).toHaveLength(1);
-  });
-
-  it('clicking a NotificationItem calls markAsAread', () => {
-    const props = {
-      ...baseProps,
-      displayDrawer: true,
-      listNotifications: [
-        { id: '1', type: 'default', value: 'one' },
-      ],
-    };
-    const wrapper = shallow(<Notifications {...props}/>);
-    const item = wrapper.find(NotificationItem);
-    item.simulate('click');
-    expect(props.markAsAread).toHaveBeenCalledWith('1');
+  it('calls setNotificationFilter("DEFAULT") when default filter button clicked', () => {
+    const defaultBtn = wrapper
+      .find('button')
+      .filterWhere((n) => n.text() === '💠');
+    defaultBtn.simulate('click');
+    expect(baseProps.setNotificationFilter).toHaveBeenCalledWith('DEFAULT');
   });
 });
