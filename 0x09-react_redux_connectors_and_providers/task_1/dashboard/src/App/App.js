@@ -112,12 +112,12 @@ const styles = StyleSheet.create({
 });
 
 App.propTypes = {
-  listCourses:                     PropTypes.array.isRequired,
-  listNotifications:               PropTypes.array.isRequired,
-  isLoggedIn:                      PropTypes.bool.isRequired,
-  displayDrawer:                   PropTypes.bool.isRequired,
-  displayNotificationDrawer:       PropTypes.func.isRequired,
-  hideNotificationDrawer:          PropTypes.func.isRequired,
+  listCourses:                   PropTypes.array.isRequired,
+  listNotifications:             PropTypes.array.isRequired,
+  isLoggedIn:                    PropTypes.bool.isRequired,
+  displayDrawer:                 PropTypes.bool.isRequired,
+  displayNotificationDrawer:     PropTypes.func.isRequired,
+  hideNotificationDrawer:        PropTypes.func.isRequired,
 };
 
 App.defaultProps = {
